@@ -66,15 +66,23 @@ class NextFit:
 		self.num_bins = 0
 
 	def measure(self, data):
-		optimal = 0 # TODO - implement estimation of optimal
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
-		waste = 0 # TODO - calculate the waste
+		waste = self.num_bins - optimal
 		self.waste.append(waste)
 		return waste
 
 	def pack(self, data):
-		# Implement the bin packing algorithm
-  
+		self.bins.append([])
+		self.num_bins = 1
+		for i in data:
+			current = self.bins[-1]
+			current_size = sum(current)
+			if current_size + i <= 1.0:
+				current.append(i)
+			else:
+				self.bins.append([i])
+				self.num_bins += 1
 		return self.num_bins
 
 # Implement the First Fit Bin Packing Algorithm
@@ -103,9 +111,9 @@ class FirstFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = 0 # TODO - implement estimation of optimal
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
-		waste = 0 # TODO - calculate the waste
+		waste = self.num_bins - optimal
 		self.waste.append(waste)
 		return waste
 
