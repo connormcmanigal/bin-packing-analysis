@@ -119,7 +119,18 @@ class FirstFit:
 
 	def pack(self, data):
 		# Implement the bin packing algorithm
-
+		for i in data:
+			added=False
+			for j in range(len(self.bins)):
+				if self.bins[j] + i <= 1.0:
+					self.bins[j].append(i)
+					self.bin_sums[j] += i
+					added=True
+					break
+			if not added:
+				self.bins.append([i])
+				self.bin_sums.append(i)
+				self.num_bins += 1
 		return self.num_bins
 
 # Implement the Best Fit Bin Packing Algorithm
