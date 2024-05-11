@@ -260,7 +260,7 @@ class BestFitDec:
 		self.packer = BestFit()		
 
 	def measure(self, data):
-		sorted = self.sorter.sort(data)
+		sorted = self.sorter.sort(data) # fix, not working
 		self.packer.measure(sorted)
 		waste = self.packer.waste if self.packer.waste else 0
 		self.bins = self.packer.bins
