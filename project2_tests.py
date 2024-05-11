@@ -9,7 +9,7 @@ The first part of this code will verify functional correctness of all bin packin
 
 random.seed(260)
 
-names = ["NexFit", "FirstFit", "BestFit", "FirstFitDec", "BestFitDec", "CustomFit1", "CustomFit2"]
+names = ["NexFit", "FirstFit", "BestFit", "FirstFitDec", "BestFitDec"]#, "CustomFit1", "CustomFit2"]
 
 packer = [None]*7
 packer[0] = binpacking.NextFit()

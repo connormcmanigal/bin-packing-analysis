@@ -118,11 +118,10 @@ class FirstFit:
 		return waste
 
 	def pack(self, data):
-		# Implement the bin packing algorithm
 		for i in data:
 			added=False
 			for j in range(len(self.bins)):
-				if self.bins[j] + i <= 1.0:
+				if self.bin_sums[j] + i <= 1.0:
 					self.bins[j].append(i)
 					self.bin_sums[j] += i
 					added=True
@@ -219,8 +218,8 @@ class FirstFitDec:
 		self.packer = FirstFit()
 
 	def measure(self, data):
-		# TODO: Sort data
-		waste = 0 # TODO: call measure method of bin packing algorithm
+		self.sorter.sort(data)
+		waste = self.packer.measure(data)
 		self.bins = self.packer.bins
 		self.bin_sums = self.packer.bin_sums
 		self.waste = self.packer.waste
