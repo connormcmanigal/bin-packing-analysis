@@ -184,7 +184,7 @@ class BestFit:
 			else:
 				self.bins[min_bin_ind].append(i)
 				self.bin_sums[min_bin_ind] += i
-
+		
 		return self.num_bins
 	
 # Implement the First Fit Decreasing Bin Packing Algorithm
@@ -260,9 +260,8 @@ class BestFitDec:
 		self.packer = BestFit()		
 
 	def measure(self, data):
-		sorted = self.sorter.sort(data) # fix, not working
-		self.packer.measure(sorted)
-		waste = self.packer.waste if self.packer.waste else 0
+		self.sorter.sort(data) 
+		waste = self.packer.measure(data)
 		self.bins = self.packer.bins
 		self.bin_sums = self.packer.bin_sums
 		self.waste = self.packer.waste
