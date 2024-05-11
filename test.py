@@ -1,9 +1,8 @@
-from binpacking import NextFit
+from binpacking import BestFitDec
 
 data = [0.4, 0.3, 0.6, 0.41, 0.8, 0.3]
 print(sum(data))
-nf = NextFit()
+bfd = BestFitDec()
 
-waste = nf.measure(data)
-print(waste)
+bfd.measure(data)
 

@@ -28,7 +28,7 @@ class MergeSort:
 		j = mid
 
 		while (i < mid and j < high):
-			if data[i] < data[j]:
+			if data[i] > data[j]: 	# fixed to return decreasing
 				temp.append(data[i])
 				i += 1
 			else:
@@ -159,15 +159,31 @@ class BestFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = 0 # TODO - implement estimation of optimal
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
-		waste = 0 # TODO - calculate the waste
+		waste = self.num_bins - optimal
 		self.waste.append(waste)
 		return waste
 
 	def pack(self, data):
+		for i in data:
+			min_space = float('inf')
+			min_bin_ind = -1
 
-		# Implement the bin packing algorithm
+			for bin_ind in range(len(self.bins)):
+				bin_sum = sum(self.bins[bin_ind])
+				bin_space = 1.0 - bin_sum
+				if i <= bin_space and bin_space < min_space:
+					min_space = bin_space
+					min_bin_ind = bin_ind
+
+			if min_bin_ind == -1:
+				self.bins.append([i])
+				self.bin_sums.append(i)
+				self.num_bins += 1
+			else:
+				self.bins[min_bin_ind].append(i)
+				self.bin_sums[min_bin_ind] += i
 
 		return self.num_bins
 	
@@ -244,8 +260,9 @@ class BestFitDec:
 		self.packer = BestFit()		
 
 	def measure(self, data):
-		# TODO: Sort data
-		waste = 0 # TODO: call measure method of bin packing algorithm
+		sorted = self.sorter.sort(data)
+		self.packer.measure(sorted)
+		waste = self.packer.waste if self.packer.waste else 0
 		self.bins = self.packer.bins
 		self.bin_sums = self.packer.bin_sums
 		self.waste = self.packer.waste
@@ -268,7 +285,7 @@ class BestFitDec:
 # 	measure: 	is a method to compute the waste by estimating the optimal and calling pack on the data
 #	pack: 		is a method which implements the bin packing algorithm
 
-class CustomFit:
+class CustomFit1:
 	def __init__(self):
 		self.bins = [[]]
 		self.bin_sums = [0]
@@ -300,7 +317,53 @@ class CustomFit:
 		self.num_bins = self.packer.num_bins
 		return waste
 
+# Implement a Custom Fit Bin Packing Algorithm
+# 	The goal is to modify the best performing (fewest bins) algorithm
+# 	to try to improve the packing (number of bins) for at least 1 set of the standard input data.
+#	HINT: 		try modifying data after sorting 
+# 	bins: 		is a list of lists, where each inner list shows the contents of a bin (do not change)
+#	bin_sums: 	is a list of sums, one for each bin
+# 	waste: 		is the computed waste for the input data (do not change)
+#	times:		is a list to hold the run times (do not change)
+# 	num_bins: 	stores the number of bins required to pack the data (do not change)
+#	sorter:		sorting object
+# 	packer:		bin packing object
+# 	reset: 		is a method to reset the state of the packing object (do not change)
+# 	measure: 	is a method to compute the waste by estimating the optimal and calling pack on the data
+#	pack: 		is a method which implements the bin packing algorithm
 
+class CustomFit2:
+	def __init__(self):
+		self.bins = [[]]
+		self.bin_sums = [0]
+		self.waste = []
+		self.times = []
+		self.num_bins = 1
+		self.sorter = MergeSort()
+		self.packer = None # TODO: Use the best bin packing algorithm based on the test data 
+
+	def reset(self):
+		self.bins = [[]]
+		self.bin_sums = [0]
+		self.waste = []
+		self.times = []
+		self.num_bins = 1
+		self.sorter = MergeSort()
+		self.packer = None # TODO: Use the best bin packing algorithm based on the test data 
+
+	def measure(self, data):
+		# TODO: Sort Data
+		
+		# Implement Optimization
+  
+		waste = self.packer.measure(data)
+		self.bins = self.packer.bins
+		self.bin_sums = self.packer.bin_sums
+		self.waste = self.packer.waste
+		self.times = self.packer.times
+		self.num_bins = self.packer.num_bins
+		return waste
+	
 	# feel free to define new methods in addition to the above
 	# fill in the definitions of each required member function (above),
 	# and for any additional member functions you define
