@@ -11,7 +11,8 @@ class MergeSort:
 		self.time = 0
 
 	def sort(self, data):
-		self.sortHelper(data, 0, len(data))
+		sorted_data = self.sortHelper(data, 0, len(data))
+		return sorted_data
 
 	def sortHelper(self, data, low, high):
 		if high - low > 1:
@@ -291,7 +292,7 @@ class CustomFit1:
 		self.times = []
 		self.num_bins = 1
 		self.sorter = MergeSort()
-		self.packer = None # TODO: Use the best bin packing algorithm based on the test data 
+		self.packer = BestFit()
 
 	def reset(self):
 		self.bins = [[]]
@@ -300,13 +301,11 @@ class CustomFit1:
 		self.times = []
 		self.num_bins = 1
 		self.sorter = MergeSort()
-		self.packer = None # TODO: Use the best bin packing algorithm based on the test data 
-
+		self.packer = BestFit() 
+	
 	def measure(self, data):
-		# TODO: Sort Data
-		
-		# Implement Optimization
-  
+		self.sorter.sort(data)
+		# sort data and add improvement to lower bins needed after sorting
 		waste = self.packer.measure(data)
 		self.bins = self.packer.bins
 		self.bin_sums = self.packer.bin_sums
