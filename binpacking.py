@@ -67,7 +67,7 @@ class NextFit:
 		self.num_bins = 0
 
 	def measure(self, data):
-		optimal = sum(data) / 1.0
+		optimal = math.ceil(sum(data) / 1.0)
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -112,7 +112,7 @@ class FirstFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = sum(data) / 1.0
+		optimal = math.ceil(sum(data) / 1.0)
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -159,7 +159,7 @@ class BestFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = sum(data) / 1.0
+		optimal = math.ceil(sum(data) / 1.0)
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -292,7 +292,6 @@ class CustomFit1:
 		self.times = []
 		self.num_bins = 1
 		self.sorter = MergeSort()
-		self.packer = BestFit()
 
 	def reset(self):
 		self.bins = [[]]
@@ -301,17 +300,78 @@ class CustomFit1:
 		self.times = []
 		self.num_bins = 1
 		self.sorter = MergeSort()
-		self.packer = BestFit() 
+	
+	def find_pairs(self, data):
+		left = 0
+		right = len(data) - 1
+		pairs = []
+		used_indexes = set()
+		
+		while left < right:
+			if left in used_indexes:
+				left += 1
+				continue
+			if right in used_indexes or right <= left:
+				right -= 1
+				continue
+			
+			sum_pair = data[left] + data[right]
+			if sum_pair > 1.0:
+				left += 1
+			elif 0.95 <= sum_pair <= 1.0:
+				pairs.append((data[left], data[right]))
+				used_indexes.add(left)
+				used_indexes.add(right)
+				left += 1
+				right -= 1
+			elif sum_pair < 0.95:
+				right -= 1
+				
+		return pairs
+	
+	def pack_first_fit(self, remaining):
+		for item in remaining:
+			placed = False
+			for bin_index, bin_contents in enumerate(self.bins):
+				if sum(bin_contents) + item <= 1.0:
+					self.bins[bin_index].append(item)
+					placed = True
+					break
+			if not placed:
+				self.bins.append([item])
+				self.num_bins += 1
+		
+			
+	def pack_pairs(self, pairs):
+		for pair in pairs:
+			placed = False
+			for bin_ind in range(len(self.bins)):
+				bin_space = 1.0 - sum(self.bins[bin_ind])
+				pair_sum = sum(pair)
+				if pair_sum <= bin_space:
+					self.bins[bin_ind].extend(pair)
+					placed = True
+					break
+			if not placed:
+				self.bins.append(list(pair))
+				self.num_bins += 1
+
+	def pair_pack(self, data):
+		self.sorter.sort(data)
+		paired_items = self.find_pairs(data)
+		paired = [item for pair in paired_items for item in pair]
+		remaining = [item for item in data if item not in paired]
+		self.pack_pairs(paired_items)
+		self.pack_first_fit(remaining)
+
 	
 	def measure(self, data):
-		self.sorter.sort(data)
-		# sort data and add improvement to lower bins needed after sorting
-		waste = self.packer.measure(data)
-		self.bins = self.packer.bins
-		self.bin_sums = self.packer.bin_sums
-		self.waste = self.packer.waste
-		self.times = self.packer.times
-		self.num_bins = self.packer.num_bins
+		self.reset()
+		self.pair_pack(data)
+		optimal = math.ceil(sum(data) / 1.0)
+		waste = self.num_bins - optimal
+		self.waste.append(waste)		
+
 		return waste
 
 # Implement a Custom Fit Bin Packing Algorithm

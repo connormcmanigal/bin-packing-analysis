@@ -9,16 +9,16 @@ The first part of this code will verify functional correctness of all bin packin
 
 random.seed(260)
 
-names = ["NexFit", "FirstFit", "BestFit", "FirstFitDec", "BestFitDec"]#, "CustomFit1", "CustomFit2"]
+names = ["NexFit", "FirstFit", "BestFit", "FirstFitDec", "BestFitDec", "CustomFit1"]#, "CustomFit2"]
 
-packer = [None]*7
+packer = [None]*6
 packer[0] = binpacking.NextFit()
 packer[1] = binpacking.FirstFit()
 packer[2] = binpacking.BestFit()
 packer[3] = binpacking.FirstFitDec()
 packer[4] = binpacking.BestFitDec()
 packer[5] = binpacking.CustomFit1()
-packer[6] = binpacking.CustomFit2()
+#packer[6] = binpacking.CustomFit2()
 
 DATA_SIZE = 50
 NUM_EXP = 9

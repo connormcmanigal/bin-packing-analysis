@@ -1,12 +1,22 @@
 from binpacking import BestFitDec, BestFit, CustomFit1
+import math
+import random
 
-data = [0.4, 0.5, 0.25, 0.6, 0.2, 0.05, 0.45, 0.8, 0.65, 0.75]
-print(sum(data))
-bf = BestFit()
+data = []
+for i in range(100):
+    data.append(round(random.uniform(0.0,0.8), 8))
+
 bfd = BestFitDec()
 cf1 = CustomFit1()
-waste1 = bf.measure(data)
 waste2 = bfd.measure(data)
 waste3 = cf1.measure(data)
-print("BF:", waste1, "BFD:", waste2, "CF1:", waste3)
+print("Optimal # bins:", math.ceil(sum(data)))
+print()
+print("BFD bin assignments:", bfd.bins)
+print("BFD # Bins:", bfd.num_bins)
+print()
+print("CF1 bin assignments:", cf1.bins)
+print("CF1 # Bins:", cf1.num_bins)
+print()
+print("wastes = ", "BFD:", waste2, "CF1:", waste3)
 
