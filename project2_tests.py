@@ -5,37 +5,25 @@ import math
 import csv
 import pandas as pd
 
+names = ["NextFit", 'FirstFit' , "BestFit", "FirstFitDec", "BestFitDec"]
 
-'''
-The first part of this code will verify functional correctness of all bin packing algorithms.
-'''
-
-# random.seed(260)
-
-names = ["NextFit", 'FirstFit' , "BestFit", "FirstFitDec", "BestFitDec", "CustomFit1"]#, "CustomFit2"]
-
-packer = [None]*6
+packer = [None]*5
 packer[0] = binpacking.NextFit()
 packer[1] = binpacking.FirstFit()
 packer[2] = binpacking.BestFit()
 packer[3] = binpacking.FirstFitDec()
 packer[4] = binpacking.BestFitDec()
-packer[5] = binpacking.CustomFit1()
-#packer[6] = binpacking.CustomFit2()
 
-DATA_SIZE = 50
-NUM_EXP = 9
-data = []
-algo_df=pd.DataFrame(columns = ['Algos', 'Data Size', 'Waste', 'Runtime'])
-seeds = [1,2,3]
+algo_df = pd.DataFrame(columns = ['Algos', 'Data Size', 'Waste', 'Runtime'])
+seeds = [123, 234, 345, 456, 567]
 
-for exp_num in range(3):
+for exp_num in range(5):
     DATA_SIZE = 50
     NUM_EXP = 9
     data = []   
     random.seed(seeds[exp_num])
     for j in range(NUM_EXP):
-        print()
+        # print()
         DATA_SIZE = DATA_SIZE * 2
         # print("DATA_SIZE:", DATA_SIZE)
         data = []
@@ -45,7 +33,6 @@ for exp_num in range(3):
         data_save = data.copy()
 
         # Uniformly distributed data
-        
         for i in range(len(packer)):
             packer[i].reset()
             # print(names[i])
@@ -54,7 +41,8 @@ for exp_num in range(3):
             packer[i].measure(data)
             end_time = time.perf_counter()
             packer[i].times.append(end_time - start_time)
-        print()
+
+        # print()
         # print("Uniformly Distributed Random Data Waste: ")
         for i in range(len(packer)):
             waste=[]
@@ -63,8 +51,7 @@ for exp_num in range(3):
             algo_df = algo_df._append(pd.Series(waste, index=algo_df.columns), ignore_index=True)
             # print(names[i], packer[i].waste)
 
-        print()
-
+        # print()
         # print("Uniformly Distributed Random Data Time: ")
         # for i in range(len(packer)):    
             # print(names[i], packer[i].times)
