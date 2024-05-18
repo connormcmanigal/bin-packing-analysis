@@ -285,97 +285,55 @@ class BestFitDec:
 #	pack: 		is a method which implements the bin packing algorithm
 
 class CustomFit1:
-	def __init__(self):
-		self.bins = [[]]
-		self.bin_sums = [0]
-		self.waste = []
-		self.times = []
-		self.num_bins = 1
-		self.sorter = MergeSort()
+    def __init__(self, threshold = 0.15):
+        self.bins = [[]]
+        self.bin_sums = [0]
+        self.waste = []
+        self.times = []
+        self.num_bins = 1
+        self.threshold = threshold
+        self.sorter = MergeSort()      
 
-	def reset(self):
-		self.bins = [[]]
-		self.bin_sums = [0]
-		self.waste = []
-		self.times = []
-		self.num_bins = 1
-		self.sorter = MergeSort()
-	
-	def find_pairs(self, data):
-		left = 0
-		right = len(data) - 1
-		pairs = []
-		used_indices = set()
-		
-		while left < right:
-			if left in used_indices:
-				left += 1
-				continue
-			if right in used_indices or right <= left:
-				right -= 1
-				continue
-			
-			sum_pair = data[left] + data[right]
-			if sum_pair > 1.0:
-				left += 1
-			elif 0.95 <= sum_pair <= 1.0:
-				pairs.append((data[left], data[right]))
-				used_indices.add(left)
-				used_indices.add(right)
-				left += 1
-				right -= 1
-			elif sum_pair < 0.95:
-				right -= 1
-		return pairs, used_indices
-	
-	def pack_first_fit(self, remaining):
-		for item in remaining:
-			placed = False
-			for bin_index, contents in enumerate(self.bins):
-				if sum(contents) + item <= 1.0:
-					self.bins[bin_index].append(item)
-					placed = True
-					break
-			if not placed:
-				self.bins.append([item])
-				self.num_bins += 1
-			
-	def pack_pairs(self, pairs):
-		for pair in pairs:
-			placed = False
-			for bin_index in range(len(self.bins)):
-				bin_space = 1.0 - sum(self.bins[bin_index])
-				pair_sum = sum(pair)
-				if pair_sum <= bin_space:
-					self.bins[bin_index].extend(pair)
-					placed = True
-					break
-			if not placed:
-				self.bins.append(list(pair))
-				self.num_bins += 1
+    def reset(self):
+        self.bins = [[]]
+        self.bin_sums = [0]
+        self.waste = []
+        self.times = []
+        self.num_bins = 1
+        self.sorter = MergeSort()
+    
+    def pack(self, data):
+        for elem in data:
+            for bin_index, contents in enumerate(self.bins):
+                space_left = 1.0 - sum(contents)
+                if space_left >= elem:
+                    if space_left >= self.threshold:
+                        self.bins[bin_index].append(elem)
+                        break
+                    else:
+                        continue
+            else:
+                self.bins.append([elem])
+                self.num_bins += 1
 
-	def pair_pack(self, data):
-		paired_items, used_indexes = self.find_pairs(data)
-		remaining = [data[i] for i in range(len(data)) if i not in used_indexes]
-		self.pack_pairs(paired_items)
-		self.pack_first_fit(remaining)
+    def measure(self, data):
+        self.reset()
+        self.pack(data)
+        optimal = sum(data) / 1.0
+        waste = self.num_bins - optimal
+        self.waste.append(waste)
+        return waste
 	
-	def measure(self, data):
-		self.reset()
-		self.pair_pack(data)
-		optimal = sum(data) / 1.0
-		waste = self.num_bins - optimal
-		self.waste.append(waste)
-		return waste
-	
-	
+
 class CustomFit1Sorted(CustomFit1):
-    def pair_pack(self, data):
+    def measure(self, data):
+        self.reset()
         self.sorter.sort(data)
-        paired_items, used_indexes = self.find_pairs(data)
-        remaining = [data[i] for i in range(len(data)) if i not in used_indexes]
-        self.pack_pairs(paired_items)
-        self.pack_first_fit(remaining)
+        self.pack(data)
+        optimal = sum(data) / 1.0
+        waste = self.num_bins - optimal
+        self.waste.append(waste)
+        return waste
 
 
 class CustomFit2:
