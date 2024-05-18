@@ -67,7 +67,7 @@ class NextFit:
 		self.num_bins = 0
 
 	def measure(self, data):
-		optimal = math.ceil(sum(data) / 1.0)
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -112,7 +112,7 @@ class FirstFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = math.ceil(sum(data) / 1.0)
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -159,7 +159,7 @@ class BestFit:
 		self.num_bins = 1
 
 	def measure(self, data):
-		optimal = math.ceil(sum(data) / 1.0)
+		optimal = sum(data) / 1.0
 		self.num_bins = self.pack(data)
 		waste = self.num_bins - optimal
 		self.waste.append(waste)
@@ -368,7 +368,7 @@ class CustomFit1:
 	def measure(self, data):
 		self.reset()
 		self.pair_pack(data)
-		optimal = math.ceil(sum(data) / 1.0)
+		optimal = sum(data) / 1.0
 		waste = self.num_bins - optimal
 		self.waste.append(waste)		
 
