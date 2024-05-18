@@ -305,13 +305,13 @@ class CustomFit1:
 		left = 0
 		right = len(data) - 1
 		pairs = []
-		used_indexes = set()
+		used_indices = set()
 		
 		while left < right:
-			if left in used_indexes:
+			if left in used_indices:
 				left += 1
 				continue
-			if right in used_indexes or right <= left:
+			if right in used_indices or right <= left:
 				right -= 1
 				continue
 			
@@ -320,36 +320,34 @@ class CustomFit1:
 				left += 1
 			elif 0.95 <= sum_pair <= 1.0:
 				pairs.append((data[left], data[right]))
-				used_indexes.add(left)
-				used_indexes.add(right)
+				used_indices.add(left)
+				used_indices.add(right)
 				left += 1
 				right -= 1
 			elif sum_pair < 0.95:
 				right -= 1
-				
-		return pairs
+		return pairs, used_indices
 	
 	def pack_first_fit(self, remaining):
 		for item in remaining:
 			placed = False
-			for bin_index, bin_contents in enumerate(self.bins):
-				if sum(bin_contents) + item <= 1.0:
+			for bin_index, contents in enumerate(self.bins):
+				if sum(contents) + item <= 1.0:
 					self.bins[bin_index].append(item)
 					placed = True
 					break
 			if not placed:
 				self.bins.append([item])
 				self.num_bins += 1
-		
 			
 	def pack_pairs(self, pairs):
 		for pair in pairs:
 			placed = False
-			for bin_ind in range(len(self.bins)):
-				bin_space = 1.0 - sum(self.bins[bin_ind])
+			for bin_index in range(len(self.bins)):
+				bin_space = 1.0 - sum(self.bins[bin_index])
 				pair_sum = sum(pair)
 				if pair_sum <= bin_space:
-					self.bins[bin_ind].extend(pair)
+					self.bins[bin_index].extend(pair)
 					placed = True
 					break
 			if not placed:
@@ -357,37 +355,28 @@ class CustomFit1:
 				self.num_bins += 1
 
 	def pair_pack(self, data):
-		self.sorter.sort(data)
-		paired_items = self.find_pairs(data)
-		paired = [item for pair in paired_items for item in pair]
-		remaining = [item for item in data if item not in paired]
+		paired_items, used_indexes = self.find_pairs(data)
+		remaining = [data[i] for i in range(len(data)) if i not in used_indexes]
 		self.pack_pairs(paired_items)
 		self.pack_first_fit(remaining)
-
 	
 	def measure(self, data):
 		self.reset()
 		self.pair_pack(data)
 		optimal = sum(data) / 1.0
 		waste = self.num_bins - optimal
-		self.waste.append(waste)		
-
+		self.waste.append(waste)
 		return waste
+	
+	
+class CustomFit1Sorted(CustomFit1):
+    def pair_pack(self, data):
+        self.sorter.sort(data)
+        paired_items, used_indexes = self.find_pairs(data)
+        remaining = [data[i] for i in range(len(data)) if i not in used_indexes]
+        self.pack_pairs(paired_items)
+        self.pack_first_fit(remaining)
 
-# Implement a Custom Fit Bin Packing Algorithm
-# 	The goal is to modify the best performing (fewest bins) algorithm
-# 	to try to improve the packing (number of bins) for at least 1 set of the standard input data.
-#	HINT: 		try modifying data after sorting 
-# 	bins: 		is a list of lists, where each inner list shows the contents of a bin (do not change)
-#	bin_sums: 	is a list of sums, one for each bin
-# 	waste: 		is the computed waste for the input data (do not change)
-#	times:		is a list to hold the run times (do not change)
-# 	num_bins: 	stores the number of bins required to pack the data (do not change)
-#	sorter:		sorting object
-# 	packer:		bin packing object
-# 	reset: 		is a method to reset the state of the packing object (do not change)
-# 	measure: 	is a method to compute the waste by estimating the optimal and calling pack on the data
-#	pack: 		is a method which implements the bin packing algorithm
 
 class CustomFit2:
 	def __init__(self):
