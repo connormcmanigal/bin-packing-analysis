@@ -370,10 +370,23 @@ class CustomFit2:
 			modified_data.append(group_sum)
 		modified_data=other_items+modified_data
 		return modified_data
+	def modify2(self, data, num_ranges=5):
+		range_size=1/num_ranges
+		ranges=[[] for i in range(num_ranges-1)]
+		for item in data:
+			range_index=int(item//range_size)
+			if range_index==num_ranges:
+				range_index-=1
+			ranges[range_index].append(item)
+		new_data=[]
+		for i in ranges[::-1]:
+			new_data.extend(i)
+		return new_data
+
 
 	def measure(self, data):
 		# Implement Optimization
-		data=self.modify(data)
+		data=self.modify2(data)
 		waste = self.packer.measure(data)
 		self.bins = self.packer.bins
 		self.bin_sums = self.packer.bin_sums
