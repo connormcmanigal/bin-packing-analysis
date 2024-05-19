@@ -357,16 +357,21 @@ class CustomFit2:
 
 	def modify(self, data):
 		modified_data=[]
-		group_size=len(data) // 3
-
-		small_items=data[-group_size:]
-		small_group=[sum(small_items)]
-		modified_data=data[:group_size]+small_group
+		limit=0.20
+		small_items=[item for item in data if item <=limit]
+		other_items=[item for item in data if item > limit]
+		while small_items:
+			group=[]
+			group_sum=0
+			while small_items and group_sum+small_items[-1] <= 1:
+				item=small_items.pop()
+				group.append(item)
+				group_sum+=item
+			modified_data.append(group_sum)
+		modified_data=other_items+modified_data
 		return modified_data
 
 	def measure(self, data):
-		# TODO: Sort Data
-		self.sorter.sort(data)
 		# Implement Optimization
 		data=self.modify(data)
 		waste = self.packer.measure(data)
