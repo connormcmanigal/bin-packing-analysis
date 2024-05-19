@@ -43,8 +43,7 @@ for exp_num in range(5):
             waste=[f'{names[i], exp_num}', DATA_SIZE,packer[i].waste[0], packer[i].times[0]]
             algo_df = algo_df._append(pd.Series(waste, index=algo_df.columns), ignore_index=True)
     
-print(algo_df)
 algo_df.to_csv('cf2_results.csv', index = False)
-	
+print('Done')
 
 	
