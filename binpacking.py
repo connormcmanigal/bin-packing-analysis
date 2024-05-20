@@ -343,7 +343,7 @@ class CustomFit2:
 		self.waste = []
 		self.times = []
 		self.num_bins = 1
-		self.sorter = MergeSort()
+		# self.sorter = MergeSort()
 		self.packer = BestFit() # TODO: Use the best bin packing algorithm based on the test data 
 
 	def reset(self):
@@ -352,7 +352,7 @@ class CustomFit2:
 		self.waste = []
 		self.times = []
 		self.num_bins = 1
-		self.sorter = MergeSort()
+		# self.sorter = MergeSort()
 		self.packer = BestFit() # TODO: Use the best bin packing algorithm based on the test data 
 
 	def modify(self, data):
@@ -370,6 +370,7 @@ class CustomFit2:
 			modified_data.append(group_sum)
 		modified_data=other_items+modified_data
 		return modified_data
+	
 	def modify2(self, data, num_ranges=5):
 		range_size=1/num_ranges
 		ranges=[[] for i in range(num_ranges-1)]
