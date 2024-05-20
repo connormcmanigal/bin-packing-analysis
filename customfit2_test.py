@@ -46,4 +46,27 @@ for exp_num in range(5):
 algo_df.to_csv('cf2_results.csv', index = False)
 print('Done')
 
-	
+
+
+####### Testing if modify2 works correctly
+
+# def modify2(data, num_ranges=5):
+#     range_size=1/num_ranges
+#     ranges=[[] for i in range(num_ranges-1)]
+#     for item in data:
+#         range_index=int(item//range_size)
+#         if range_index==num_ranges:
+#             range_index-=1
+#         ranges[range_index].append(item)
+#     new_data=[]
+#     for i in ranges[::-1]:
+#         new_data.extend(i)
+#     return new_data
+
+# test=[round(random.uniform(0.0,0.8), 8) for _ in range(100)]
+
+# print(sum(test))
+
+# print((sum(modify2(test))))
+
+# print(modify2(test))
