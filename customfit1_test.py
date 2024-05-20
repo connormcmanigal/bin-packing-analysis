@@ -3,14 +3,13 @@ import random
 import time
 import pandas as pd
 
-names = ['NextFit', 'FirstFit', 'BestFit', 'CustomFit1', 'CustomFit1Sorted']
+names = ['NextFit', 'FirstFit', 'BestFit', 'CustomFit1']
 
-packer = [None]*5
+packer = [None]*4
 packer[0] = binpacking.NextFit()
 packer[1] = binpacking.FirstFit()
 packer[2] = binpacking.BestFit()
 packer[3] = binpacking.CustomFit1()
-packer[4] = binpacking.CustomFit1Sorted()
 
 algo_df = pd.DataFrame(columns = ['Algos', 'Data Size', 'Waste', 'Runtime'])
 seeds = [123, 234, 345, 456, 567]

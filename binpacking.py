@@ -317,17 +317,6 @@ class CustomFit1:
                 self.num_bins += 1
 
     def measure(self, data):
-        self.reset()
-        self.pack(data)
-        optimal = sum(data) / 1.0
-        waste = self.num_bins - optimal
-        self.waste.append(waste)
-        return waste
-	
-
-class CustomFit1Sorted(CustomFit1):
-    def measure(self, data):
-        self.reset()
         self.sorter.sort(data)
         self.pack(data)
         optimal = sum(data) / 1.0
