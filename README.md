@@ -1,5 +1,7 @@
 # DATA260P Project 2: Bin Packing Algorithms
 
+https://connormcmanigal.github.io/bin-packing-analysis/report.ipynb
+
 ### Connor McManigal and Aaron Mui
 
 - Implemented next fit, first fit, best fit, first fit decreasing, and best fit decreasing
