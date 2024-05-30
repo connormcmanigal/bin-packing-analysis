@@ -1,6 +1,6 @@
 # DATA260P Project 2: Bin Packing Algorithms
 
-https://connormcmanigal.github.io/bin-packing-analysis/report.ipynb
+https://connormcmanigal.github.io/bin-packing-analysis/docs/report.pdf
 
 ### Connor McManigal and Aaron Mui
 
